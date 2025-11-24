@@ -1,0 +1,115 @@
+version: "3.9"
+
+services:
+
+  # -------------------------
+  # POSTGRES FOR CUSTOMERS
+  # -------------------------
+  postgres_customers:
+    image: postgres:16
+    container_name: postgres_customers
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: customers_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_customers_data:/var/lib/postgresql/data
+      - ./customer_service/db/scripts:/scripts
+
+  # -------------------------
+  # POSTGRES FOR INVOICES
+  # -------------------------
+  postgres_invoices:
+    image: postgres:16
+    container_name: postgres_invoices
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: invoices_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_invoices_data:/var/lib/postgresql/data
+      - ./invoice_service/db/scripts:/scripts
+
+  # -------------------------
+  # MONGO FOR AUDIT
+  # -------------------------
+  mongo:
+    image: mongo:7
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts:/scripts
+
+  # -------------------------
+  # CUSTOMER SERVICE
+  # -------------------------
+  customer_service:
+    build: ./customer_service
+    container_name: customer_service_app
+    depends_on:
+      - postgres_customers
+      - audit_service
+    environment:
+      RAILS_ENV: development
+      DB_HOST: postgres_customers
+      DB_USERNAME: admin
+      DB_PASSWORD: admin123
+      DB_NAME: customers_db
+      AUDIT_URL: http://audit_service_app:3003/audit_events
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./customer_service:/app
+
+  # -------------------------
+  # INVOICE SERVICE
+  # -------------------------
+  invoice_service:
+    build: ./invoice_service
+    container_name: invoice_service_app
+    depends_on:
+      - postgres_invoices
+      - customer_service
+      - audit_service
+    environment:
+      RAILS_ENV: development
+      DB_HOST: postgres_invoices
+      DB_USERNAME: admin
+      DB_PASSWORD: admin123
+      DB_NAME: invoices_db
+      AUDIT_URL: http://audit_service_app:3003/audit_events
+      #CUSTOMER_SERVICE_URL: http://customer_service_app:3001
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./invoice_service:/app
+
+  # -------------------------
+  # AUDIT SERVICE
+  # -------------------------
+  audit_service:
+    build: ./audit_service
+    container_name: audit_service_app
+    depends_on:
+      - mongo
+    environment:
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./audit_service:/app
+
+# -------------------------
+# VOLUMES
+# -------------------------
+volumes:
+  postgres_customers_data:
+  postgres_invoices_data:
+  mongo_data:
