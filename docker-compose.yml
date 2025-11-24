@@ -84,7 +84,7 @@ services:
       DB_PASSWORD: admin123
       DB_NAME: invoices_db
       AUDIT_URL: http://audit_service_app:3000/audit_events
-      #CUSTOMER_SERVICE_URL: http://customer_service_app:3001
+      CUSTOMER_SERVICE_URL: http://customer_service_app:3000
     ports:
       - "3002:3000"
     volumes:
