@@ -8,6 +8,7 @@ FactuMarket es una aplicación basada en microservicios diseñada para gestionar
 - [Requisitos Previos](#requisitos-previos)
 - [Configuración y Ejecución](#configuración-y-ejecución)
 - [API Gateway](#api-gateway)
+- [Colección de Postman](#-colección-de-postman)
 - [Endpoints de la API](#endpoints-de-la-api)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Tecnologías Utilizadas](#tecnologías-utilizadas)
@@ -120,6 +121,51 @@ El gateway redirige automáticamente las peticiones según la ruta:
 - **Único punto de entrada**: No necesitas recordar múltiples puertos
 - **Escalabilidad**: Facilita añadir balanceo de carga
 - **Seguridad**: Centraliza autenticación y autorización (futuro)
+
+## 📮 Colección de Postman
+
+El proyecto incluye una **colección completa de Postman** con todos los endpoints documentados y listos para usar.
+
+### 📦 Ubicación
+
+La colección se encuentra en: [`postman/FactuMarket.postman_collection.json`](postman/FactuMarket.postman_collection.json)
+
+### 🚀 Importar en Postman
+
+1. Abre Postman
+2. Haz clic en **Import** (esquina superior izquierda)
+3. Arrastra el archivo `FactuMarket.postman_collection.json` o selecciona **Choose Files**
+4. Haz clic en **Import**
+
+### ✨ Qué incluye
+
+La colección está organizada en **3 carpetas** con todos los endpoints:
+
+- **Customers** (Clientes)
+  - Crear cliente
+  - Listar clientes
+  - Obtener cliente por ID
+  
+- **Invoices** (Facturas)
+  - Crear factura
+  - Listar facturas (con paginación y filtros de fecha)
+  - Obtener factura por ID
+
+- **AuditEvents** (Auditoría)
+  - Obtener eventos de auditoría por entidad
+
+### 💡 Ventajas de usar la colección
+
+- ✅ **Ejemplos de respuestas guardadas** para referencia
+- ✅ **Requests preconfigurados** listos para ejecutar
+- ✅ **Body de ejemplo** con datos válidos
+- ✅ **URLs configuradas** para API Gateway y puertos directos
+- ✅ **Sin configuración adicional** - importa y usa
+
+### 📖 Documentación completa
+
+Para más detalles sobre cómo usar la colección, consulta: [postman/README.md](postman/README.md)
+
 
 ## 📡 Endpoints de la API
 
@@ -313,6 +359,10 @@ FactuMarket/
 │   ├── Dockerfile
 │   └── Gemfile
 │
+├── postman/                   # Colección de Postman
+│   ├── FactuMarket.postman_collection.json
+│   └── README.md              # Documentación de la colección
+│
 ├── nginx.conf                 # Configuración del API Gateway
 ├── docker-compose.yml         # Orquestación de servicios
 └── README.md                  # Este archivo
@@ -416,5 +466,3 @@ docker-compose logs -f customer_service
 8. **Persistencia de Datos**: Volúmenes Docker para mantener datos entre reinicios
 
 ---
-
-**Desarrollado como prueba técnica para FactuMarket** 🚀
